@@ -214,7 +214,7 @@ class CarCl {
     }
 
     get speedUs() {
-        console.log(`${this.make} is traveline at ${this._speedUs}mi/h`)
+        console.log(`${this.make} is traveling at ${this._speedUs}mi/h`)
     }
 }
 
@@ -249,9 +249,42 @@ ngoni.intoduce();
 console.log(ngoni.calcAge());
 
 //coding challenge 3
-class Ev {
-    constructor(make, speed, charge) {
+const Ev = function (make,speed,charge){
         Car.call(this, make, speed)
+        this.batteryCharge = charge;
+
+}
+//linking prototypes
+Ev.prototype = Object.create(Car.prototype);
+Ev.prototype.constructor = Ev;
+
+Ev.prototype.accelerate=function () {
+        this.speed += 20;
+        this.batteryCharge -= 1;
+        console.log(`${this.make} is traveling at ${this.speed}km/h with a charge of ${this.batteryCharge}%`);
+    }
+
+Ev.prototype.brake=function () {
+        this.speed -= 10;
+        this.batteryCharge += 1;
+        console.log(`${this.make} is traveling at ${this.speed}km/h with a charge of ${this.batteryCharge}%`);
+    }
+
+ Ev.prototype.chargeBattery = function(chargeTo) {
+        this.batteryCharge = chargeTo;
+    }
+
+
+const tesla = new Ev('Testla', 120, 23);
+tesla.accelerate();
+tesla.chargeBattery (50);
+tesla.brake();
+console.log(tesla);
+
+class EvCL extends CarCl {
+    constructor(make, speed, charge) {
+        //always first
+        super(make,speed);
         this.batteryCharge = charge;
     }
 
@@ -259,12 +292,14 @@ class Ev {
         this.speed += 20;
         this.batteryCharge -= 1;
         console.log(`${this.make} is traveling at ${this.speed}km/h with a charge of ${this.batteryCharge}%`);
+        this.speedUs = this.speed;
     }
 
     brake = function () {
         this.speed -= 10;
         this.batteryCharge += 1;
         console.log(`${this.make} is traveling at ${this.speed}km/h with a charge of ${this.batteryCharge}%`);
+        this.speedUs = this.speed;
     }
 
     set chargeBattery(chargeTo) {
@@ -276,15 +311,75 @@ class Ev {
     }
 
 }
-//linking prototypes
-// Ev.prototype = Object.create(Car.prototype);
-// Ev.prototype.constructor = Ev;
 
+const rivian = new EvCL('Rovian',120,34);
+rivian.accelerate();
+rivian.speedUs;
 
-const tesla = new Ev('Testla', 120, 23);
-tesla.accelerate();
-tesla.chargeBattery;
-tesla.chargeBattery = 50;
-tesla.chargeBattery;
-tesla.brake();
-console.log(tesla);
+//1. Public fields
+//2. Private fields
+//3. Public methods
+//4. Private methods
+//(there are also staic versions of these)
+
+class Account{
+
+    //Public fields (on instances)
+    locale = navigator.language;
+    
+    //2. Private fields (on instances)
+    #movements = [];
+    #pin;
+    constructor(owner, currency, pin){
+        this.owner = owner;
+        this.currency = currency;
+        //protected
+        this.#pin = pin;
+        // this._movements = [];
+        // this.locale = navigator.language;
+        console.log(`Thanks for opening account, ${owner}`);
+    }
+
+    //3. Public methods
+    getMovements(){
+        return this.#movements;
+    }
+
+    deposit(val){
+        this.#movements.push(val);
+        return this //helps with chaining
+    }
+
+    withdraw(val){
+        this.deposit(-val);
+        return this
+    }
+
+    requestLoan(val){
+        if(this._approveLoan(val)){
+            this.deposit(val);
+            console.log('loan approved');
+            return this;
+        }
+
+    }
+
+    //Private methods
+    // #approveLoan(val){
+    _approveLoan(val){
+        return true;
+    }
+
+}
+
+const acc1 = new Account('Michael', 'EUR', 1111);
+
+acc1.deposit(250);
+acc1.withdraw(140);
+
+console.log(acc1.getMovements())
+console.log(acc1);
+
+//Chaining
+acc1.deposit(300).deposit(500).requestLoan(1000).withdraw(200);
+console.log(acc1.getMovements())
