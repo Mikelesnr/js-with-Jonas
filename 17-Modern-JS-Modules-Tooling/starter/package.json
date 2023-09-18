@@ -1,0 +1,20 @@
+{
+  "name": "modern-js-modules-tooling",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "author": "Michael Mwanza",
+  "license": "ISC",
+  "dependencies": {
+    "core-js": "^3.32.2",
+    "leaflet": "^1.9.4",
+    "lodash-es": "^4.17.21"
+  },
+  "devDependencies": {
+    "parcel": "^2.9.3"
+  }
+}
